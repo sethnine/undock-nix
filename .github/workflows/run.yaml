@@ -4,12 +4,15 @@ on:
     branches:
       - main
 jobs:
-  minimal:
+  eval-flake:
+    name: "Evaluate flake"
     runs-on: ubuntu-latest
+    outputs:
+      builds: ${{ steps.find-builds.outputs.builds }}
     steps:
       - uses: actions/checkout@v3
       - uses: nixbuild/nix-quick-install-action@v26
       - uses: nixbuild/nixbuild-action@v19
         with:
           nixbuild_token: ${{ secrets.nixbuild_token }}
-      - run: nix-build container.nix
+      - run: nix build container.nix
