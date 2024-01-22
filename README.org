@@ -13,7 +13,7 @@ current directory.
 #+BEGIN_SRC sh
   docker run -v /boot/config/plugins/dockerMan/templates-user:/in:ro \
              -v ./out:/out:rw \
-             undock
+             ghcr.io/sethnine/sethnine/undock-nix:latest
 #+END_SRC
 
 ** docker compose
@@ -23,10 +23,10 @@ files to be output to. Run with ~docker compose up~.
 #+BEGIN_SRC yaml
   # compose.yml
   services:
-    image: undock
+    image: ghcr.io/sethnine/sethnine/undock-nix:latest
     volumes:
       - /boot/config/plugins/dockerMan/templates-user:/in:ro
-      - OUTPUTDIRECTORYHERE:/out:rw
+      - OUTPUTDIRECTORYHERE:/out:rw
     environment:
       UNDOCK_INPUT: /in
       UNDOCK_OUTPUT: /out
@@ -43,7 +43,7 @@ output directory.
 #+BEGIN_SRC sh
   docker run -v INPUTDIRECTORYHERE:/in:ro \
              -v OUTPUTDIRECTORYHERE:/out:rw \
-             undock
+             ghcr.io/sethnine/sethnine/undock-nix:latest
 #+END_SRC
 
 ** docker compose
@@ -52,7 +52,7 @@ you may set a filter for the input files following [[https://docs.python.org/3/h
 #+BEGIN_SRC yaml
   # compose.yml
   services:
-    image: undock
+    image: ghcr.io/sethnine/sethnine/undock-nix:latest
     volumes:
       - /boot/config/plugins/dockerMan/templates-user:/in:ro
       - ./out:/out:rw
@@ -67,4 +67,4 @@ you may set a filter for the input files following [[https://docs.python.org/3/h
 2. Cd to the repo ~cd undock-nix~
 3. Build the container using [[https://nixos.org/download][nix]] ~nix-build container.nix~
 4. Build and load the image ~./result | docker load~
-5. The image is now installed and ready for use 🎉
+5. The image is now installed and ready for development 🎉 simply refer to undock when running docker.
