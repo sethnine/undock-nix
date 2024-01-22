@@ -10,8 +10,8 @@ let
   src = pkgs.fetchFromGitHub {
     owner = "sethnine";
     repo = "undock-compose";
-    rev = "3f9e03e6c92b5ef39fce829d5f277fd6eea07477";
-    hash = "sha256-EQ6b6lAujOIXnqwYHAaLcIt+9TExQqSnUp9f47atvgk=";
+    rev = "60b498bc69f375ad0bf2a673c9af9faca4b0b9d5";
+    hash = "sha256-5tEIyBl8AT+vn6EjpYs3Q1GtefmVOjMshcfrL/0IsXM=";
   };
 in
   poetry2nix.mkPoetryApplication {
