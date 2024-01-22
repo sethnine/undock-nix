@@ -12,7 +12,7 @@ jobs:
       - uses: nixbuild/nixbuild-action@v19
         with:
           nixbuild_token: ${{ secrets.nixbuild_token }}
-      - run: nix-build container.nix
+      - run: nix build
       - name: put image in docker whatsit
         run: ./result | docker load
       - name: login to registry
