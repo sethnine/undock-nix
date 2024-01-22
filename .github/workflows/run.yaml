@@ -1,8 +1,5 @@
 name: run action
-on:
-  push:
-    branches:
-      - main
+on: push
 jobs:
   eval-flake:
     name: "Evaluate flake"
@@ -16,3 +13,5 @@ jobs:
         with:
           nixbuild_token: ${{ secrets.nixbuild_token }}
       - run: nix build container.nix
+      - run: ls
+      
