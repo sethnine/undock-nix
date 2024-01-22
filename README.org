@@ -1,0 +1,9 @@
+* Building the container
+1. get the repo `git clone "https://github.com/sethnine/undock-nix.git"`
+2. cd to the repo `cd undock-nix`
+3. build the container using [[https://nixos.org/download][nix]] `nix-build container.nix`
+4. build and load the image `./result | docker load`
+5. the image is now installed and ready to be run: `docker run -v
+   /mnt/storage/docker/oldConfigs/:/in -v
+   /home/jordan/Documents/new_configs/:/out -e UNDOCK_INPUT=/in -e
+   UNDOCK_OUTPUT=/out -it my-docker-image`
