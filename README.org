@@ -1,9 +1,70 @@
+#+OPTIONS: toc:nil
+* unDOCK-nix
+#+HTML: <div style="text-align:center;"> <img alt="Static Badge" src="https://img.shields.io/badge/made%20for-docker-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/made%20for-nix-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/made%20with-emacs-blue"> </div>
+The files in this repository are used for two purposes. One
+(default.nix) is a package for [[https://github.com/sethnine/undock-compose][sethnine's fork]] of [[https://github.com/arifer612/undock-compose][unDOCK-compose]] and
+the other (container.nix) to create a docker image for that package.
+
+* Running on unraid
+** docker run
+Below will output your config files to a folder named "out" in your
+current directory.
+
+#+BEGIN_SRC sh
+  docker run -v /boot/config/plugins/dockerMan/templates-user:/in:ro \
+             -v ./out:/out:rw \
+             undock
+#+END_SRC
+
+** docker compose
+You will need to replace OUTPUTDIRECTORYHERE with where you want your
+files to be output to. Run with ~docker compose up~.
+
+#+BEGIN_SRC yaml
+  # compose.yml
+  services:
+    image: undock
+    volumes:
+      - /boot/config/plugins/dockerMan/templates-user:/in:ro
+      - OUTPUTDIRECTORYHERE:/out:rw
+    environment:
+      UNDOCK_INPUT: /in
+      UNDOCK_OUTPUT: /out
+      UNDOCK_FILTER: .*xml
+#+END_SRC
+
+* Using the container
+First follow the [[*Building the container][Building the container]] section then loop back around
+to here.
+** docker run
+You will need to replace INPUTDIRECTORYHERE with where you want your
+input files are stired and OUTPUTDIRECTORYHERE with your desired
+output directory.
+#+BEGIN_SRC sh
+  docker run -v INPUTDIRECTORYHERE:/in:ro \
+             -v OUTPUTDIRECTORYHERE:/out:rw \
+             undock
+#+END_SRC
+
+** docker compose
+This has the same requirements as the [[*docker run][docker run]] config, additionally
+you may set a filter for the input files following [[https://docs.python.org/3/howto/regex.html][python regex rules]].
+#+BEGIN_SRC yaml
+  # compose.yml
+  services:
+    image: undock
+    volumes:
+      - /boot/config/plugins/dockerMan/templates-user:/in:ro
+      - ./out:/out:rw
+    environment:
+      UNDOCK_INPUT: /in
+      UNDOCK_OUTPUT: /out
+      UNDOCK_FILTER: .*xml
+#+END_SRC
+
 * Building the container
-1. get the repo `git clone "https://github.com/sethnine/undock-nix.git"`
-2. cd to the repo `cd undock-nix`
-3. build the container using [[https://nixos.org/download][nix]] `nix-build container.nix`
-4. build and load the image `./result | docker load`
-5. the image is now installed and ready to be run: `docker run -v
-   /mnt/storage/docker/oldConfigs/:/in -v
-   /home/jordan/Documents/new_configs/:/out -e UNDOCK_INPUT=/in -e
-   UNDOCK_OUTPUT=/out -it my-docker-image`
+1. Get the repo ~git clone "https://github.com/sethnine/undock-nix.git"~
+2. Cd to the repo ~cd undock-nix~
+3. Build the container using [[https://nixos.org/download][nix]] ~nix-build container.nix~
+4. Build and load the image ~./result | docker load~
+5. The image is now installed and ready for use 🎉
