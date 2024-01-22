@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: undock
 jobs:
   minimal:
     runs-on: ubuntu-latest
@@ -19,4 +22,16 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - name: get metadata
         run: docker image inspect undock
-        
+      - name: push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+          
+      
