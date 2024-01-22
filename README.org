@@ -63,7 +63,7 @@ you may set a filter for the input files following [[https://docs.python.org/3/h
 #+END_SRC
 
 * Building the container
-1. Get the repo ~git clone "https://github.com/sethnine/undock-nix.git"~
+1. Get the repo ~git clone "https://github.com/sethnine/undock-nix.git"⁠~
 2. Cd to the repo ~cd undock-nix~
 3. Build the container using [[https://nixos.org/download][nix]] ~nix-build container.nix~
 4. Build and load the image ~./result | docker load~
