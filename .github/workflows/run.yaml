@@ -1,10 +1,8 @@
 name: run action
-on:
+'on':
   release:
-    types: [published]
-#  push:
-#    branches:
-#      - main
+    types:
+      - published
     tags:
       - v*
 env:
@@ -18,25 +16,55 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v26
       - uses: nixbuild/nixbuild-action@v19
         with:
-          nixbuild_token: ${{ secrets.nixbuild_token }}
+          nixbuild_token: '${{ secrets.nixbuild_token }}'
       - run: nix build
       - name: put image in docker whatsit
         run: ./result | docker load
       - name: login to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-      - name: get metadata
-        run: docker image inspect undock
-      - run:  |
-          echo ${{ github.ref }}
-          echo ${{ github.repository }}
-#     - name: push image
-#       run: |
-#         IMAGE_ID=ghcr.io/${{ github.repository }}
-#         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-#         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-#         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-#         [ "$VERSION" == "main" ] && VERSION=latest
-#         echo IMAGE_ID=$IMAGE_ID
-#         echo VERSION=$VERSION
-#         docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-#         docker push $IMAGE_ID:$VERSION
+        run: >-
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $
+          --password-stdin
+      # - name: get metadata
+      #   run: docker image inspect undock
+      - run: |
+          THIS_TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # echo $THIS_TAG
+
+          LATEST_RELEASE_DATA=$(curl -H "Authorization: token ${{
+          secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+          # echo $LATEST_RELEASE_DATA
+          LATEST_RELEASE_TAG=$(echo $LATEST_RELEASE_DATA | jq -r '.tag_name' )
+          # echo latest release\n $LATEST_RELEASE_TAG
+
+
+          if [ "$LATEST_RELEASE_TAG" == "$THIS_TAG" ]; then
+            echo "This is the latest release"
+            BUILD_LATEST=true
+          else
+            BUILD_LATEST=false
+            echo "This is not the latest release"
+          fi
+
+          
+          IMAGE_ID=ghcr.io/${{ github.repository }}
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # tag with version number
+          docker tag $IMAGE_NAME $IMAGE_ID:$THIS_TAG
+          if [ "$BUILD_LATEST" == true ]; then
+            docker tag $IMAGE_NAME $IMAGE_ID:latest
+            docker push $IMAGE_ID:latest
+          fi
+          docker push $IMAGE_ID:$THIS_TAG
+          
+          # VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # [ "$VERSION" == "main" ] && VERSION=latest
+          # echo IMAGE_ID=$IMAGE_ID
+          # echo VERSION=$VERSION
+          # docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          # docker push $IMAGE_ID:$VERSION
+          
+      # - name: push image
+      #   run: |
+
