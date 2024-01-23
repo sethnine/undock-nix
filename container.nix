@@ -1,7 +1,7 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { } }:
 
 let
-  undock = pkgs.callPackage ./default.nix {};
+  undock = pkgs.callPackage ./default.nix { };
 in
 pkgs.dockerTools.streamLayeredImage {
   name = "undock";
@@ -23,5 +23,3 @@ pkgs.dockerTools.streamLayeredImage {
   #created = "now";
   # Add other configurations if needed
 }
-
-
