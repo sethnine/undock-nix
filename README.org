@@ -1,6 +1,6 @@
 #+OPTIONS: toc:nil
 * unDOCK-nix
-#+HTML: <p align="center">  <a href=""><img alt="badge: made for docker" src="https://img.shields.io/badge/made%20for-docker-blue"></a>  <a href="https://nixos.org"><img alt="badge: made for nix" src="https://img.shields.io/badge/made%20for-nix-blue"></a>  <a href="https://www.gnu.org/software/emacs"><img alt="badge: made with emacs" src="https://img.shields.io/badge/made%20with-emacs-blue"></a></p>
+#+HTML: <p align="center">  <a href="https://github.com/sethnine/undock-nix/pkgs/container/undock-nix"><img alt="Runs on docker" src="https://img.shields.io/badge/runs%20on%20docker-blue?style=for-the-badge&logo=docker&logoColor=white"></a> <a href="https://nixos.org"><img alt="Built with nix" src="https://img.shields.io/badge/built%20with%20nix-blue?style=for-the-badge&logo=nixos&logoColor=white"> </a><a href="https://www.gnu.org/software/emacs"><img alt="Made with emacs" src="https://img.shields.io/badge/made%20with%20emacs-blue?style=for-the-badge&logo=gnuemacs&logoColor=white"></a></p>
 The files in this repository are used for two purposes. One
 (default.nix) is a package for [[https://github.com/sethnine/undock-compose][sethnine's fork]] of [[https://github.com/arifer612/undock-compose][unDOCK-compose]] and
 the other (container.nix) to create a docker image for that package.
@@ -13,7 +13,7 @@ current directory.
 #+BEGIN_SRC sh
   docker run -v /boot/config/plugins/dockerMan/templates-user:/in:ro \
              -v ./out:/out:rw \
-             ghcr.io/sethnine/sethnine/undock-nix:latest
+             ghcr.io/sethnine/undock-nix:latest
 #+END_SRC
 
 ** docker compose
@@ -23,7 +23,7 @@ files to be output to. Run with ~docker compose up~.
 #+BEGIN_SRC yaml
   # compose.yml
   services:
-    image: ghcr.io/sethnine/sethnine/undock-nix:latest
+    image: ghcr.io/sethnine/undock-nix:latest
     volumes:
       - /boot/config/plugins/dockerMan/templates-user:/in:ro
       - OUTPUTDIRECTORYHERE:/out:rw
@@ -43,7 +43,7 @@ output directory.
 #+BEGIN_SRC sh
   docker run -v INPUTDIRECTORYHERE:/in:ro \
              -v OUTPUTDIRECTORYHERE:/out:rw \
-             ghcr.io/sethnine/sethnine/undock-nix:latest
+             ghcr.io/sethnine/undock-nix:latest
 #+END_SRC
 
 ** docker compose
@@ -52,7 +52,7 @@ you may set a filter for the input files following [[https://docs.python.org/3/h
 #+BEGIN_SRC yaml
   # compose.yml
   services:
-    image: ghcr.io/sethnine/sethnine/undock-nix:latest
+    image: ghcr.io/sethnine/undock-nix:latest
     volumes:
       - /boot/config/plugins/dockerMan/templates-user:/in:ro
       - ./out:/out:rw

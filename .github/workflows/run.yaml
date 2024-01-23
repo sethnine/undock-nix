@@ -1,6 +1,8 @@
 name: run action
 on:
-  push:
+  release:
+    types: [published]
+#  push:
 #    branches:
 #      - main
     tags:
@@ -24,14 +26,17 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - name: get metadata
         run: docker image inspect undock
-      - name: push image
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          [ "$VERSION" == "main" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+      - run:  |
+          echo ${{ github.ref }}
+          echo ${{ github.repository }}
+#     - name: push image
+#       run: |
+#         IMAGE_ID=ghcr.io/${{ github.repository }}
+#         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+#         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+#         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+#         [ "$VERSION" == "main" ] && VERSION=latest
+#         echo IMAGE_ID=$IMAGE_ID
+#         echo VERSION=$VERSION
+#         docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+#         docker push $IMAGE_ID:$VERSION
